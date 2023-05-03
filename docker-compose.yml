@@ -1,0 +1,38 @@
+version: '2.2'
+
+services:
+  coordinator:
+    image: trinodb/trino
+    container_name: trino-coordinator
+    ports:
+      - "8080:8080"
+    networks:
+      - trino-network
+    volumes:
+      - ./test/config/trino/config.coordinator.properties:/etc/trino/config.properties
+      - ./test/config/trino/node.properties:/etc/trino/node.properties
+      - ./test/config/trino/jvm.config:/etc/trino/jvm.config
+      - ./test/config/trino/catalog:/etc/trino/catalog
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080"]
+      interval: 5m
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+  worker:
+    image: trinodb/trino
+    container_name: trino-worker1
+    restart: always
+    volumes:
+      - ./test/config/trino/config.worker.properties:/etc/trino/config.properties
+      - ./test/config/trino/node.properties:/etc/trino/node.properties
+      - ./test/config/trino/jvm.config:/etc/trino/jvm.config
+      - ./test/config/trino/catalog:/etc/trino/catalog
+    depends_on:
+      - coordinator
+    networks:
+      - trino-network
+
+networks:
+  trino-network:
+      driver: bridge
