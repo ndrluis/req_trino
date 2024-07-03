@@ -43,9 +43,7 @@ defmodule ReqTrino do
 
     * `:catalog` - Required. The default catalog to connect.
 
-    * `:trino` - Required. The query to execute. It can be a plain sql string or
-      a `{query, params}` tuple, where `query` can contain `?` placeholders and `params`
-      is a list of corresponding values.
+    * `:trino` - Required. The query to execute.
 
   Conditional fields must always be defined, and can be one of the fields or both.
 
@@ -74,24 +72,6 @@ defmodule ReqTrino do
         ],
         statement_name: nil
       }
-
-  With parameterized query:
-
-      iex> opts = [
-      ...>   user: System.fetch_env!("TRINO_USER"),
-      ...>   password: System.fetch_env!("TRINO_PASSWORD"),
-      ...>   catalog: System.fetch_env!("TRINO_CATALOG"),
-      ...>   host: System.fetch_env!("TRINO_HOST")
-      ...> ]
-      iex> query = "SELECT id, type FROM planet WHERE id = ? and type = ?"
-      iex> req = Req.new() |> ReqTrino.attach(opts)
-      iex> Req.post!(req, trino: {query, [239_970_142, "node"]}).body
-      %ReqTrino.Result{
-        columns: ["id", "type"],
-        rows: [[239_970_142, "node"]],
-        statement_name: "query_C71EF77B8B7B92D9846C6D7E70136448"
-      }
-
   """
   def attach(%Request{} = request, options \\ []) do
     request
