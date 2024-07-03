@@ -88,19 +88,16 @@ defmodule ReqTrino do
   end
 
   def build_req_params(request, opts) do
-    request
-    |> Request.put_header(@header_user, opts[:user])
+    Request.put_header(request, @header_user, opts[:user])
   end
 
-  defp run(%Request{options: options} = request) do
-    if _query = request.options[:trino] do
-      %{request | url: URI.parse("#{options[:host]}/v1/statement"), body: options[:trino]}
-      |> build_req_params(options)
-      |> Request.append_response_steps(trino_result: &handle_trino_result/1)
-    else
-      request
-    end
+  defp run(%Request{options: %{trino: query, host: host}} = request) do
+    %{request | url: URI.parse("#{host}/v1/statement"), body: query}
+    |> build_req_params(request.options)
+    |> Request.append_response_steps(trino_result: &handle_trino_result/1)
   end
+
+  defp run(request), do: request
 
   defp stream_results(initial_body, request_options) do
     Stream.unfold({:initial, initial_body}, fn
@@ -143,9 +140,7 @@ defmodule ReqTrino do
     end
   end
 
-  defp handle_trino_result(response) do
-    response
-  end
+  defp handle_trino_result(response), do: response
 
   def decode_body(body, request_options) do
     %Result{
