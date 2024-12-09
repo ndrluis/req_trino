@@ -80,7 +80,7 @@ defmodule ReqTrino do
     |> Request.merge_options(options)
   end
 
-  def build_req_params(request, %{password: _ = opts}) do
+  def build_req_params(request, %{password: _} = opts) do
     request
     |> Request.put_header(@header_user, opts[:user])
     |> Request.put_header(@header_catalog, opts[:catalog])
