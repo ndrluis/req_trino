@@ -3,12 +3,12 @@ defmodule ReqTrino do
   alias ReqTrino.Result
 
   @header_catalog "X-Trino-Catalog"
-  @header_schema "X-Trino-Schema"
+  # @header_schema "X-Trino-Schema"
   @header_user "X-Trino-User"
-  @header_source "X-Trino-Source"
-  @header_timezone "X-Trino-Time-Zone"
-  @header_transaction_id "X-Trino-Transaction-Id"
-  @header_prepared_statement "X-Trino-Prepared-Statement"
+  # @header_source "X-Trino-Source"
+  # @header_timezone "X-Trino-Time-Zone"
+  # @header_transaction_id "X-Trino-Transaction-Id"
+  # @header_prepared_statement "X-Trino-Prepared-Statement"
 
   @moduledoc """
   `Req` plugin for [Trino](https://trino.io/).
@@ -92,7 +92,7 @@ defmodule ReqTrino do
   end
 
   defp run(%Request{options: %{trino: query, host: host}} = request) do
-    %{request | url: URI.parse("#{host}/v1/statement"), body: query}
+    %{request | url: URI.new!("#{host}/v1/statement"), body: query}
     |> build_req_params(request.options)
     |> Request.append_response_steps(trino_result: &handle_trino_result/1)
   end
