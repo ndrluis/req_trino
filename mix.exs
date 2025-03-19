@@ -43,6 +43,7 @@ defmodule ReqTrino.MixProject do
     [
       {:req, "~> 0.3.5"},
       {:table, "~> 0.1.1", optional: true},
+      {:kino, "~> 0.15", optional: true},
       {:tzdata, "~> 1.1.1", only: :test},
       {:ex_doc, ">= 0.0.0", only: :docs, runtime: false}
     ]
