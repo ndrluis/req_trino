@@ -28,3 +28,13 @@ if Code.ensure_loaded?(Table.Reader) do
     end
   end
 end
+
+if Code.ensure_loaded?(Kino.Render) do
+  defimpl Kino.Render, for: ReqTrino.Result do
+    def to_livebook(result) do
+      result
+      |> Kino.DataTable.new(name: "Results")
+      |> Kino.Render.to_livebook()
+    end
+  end
+end
