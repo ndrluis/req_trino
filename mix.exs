@@ -20,7 +20,8 @@ defmodule ReqTrino.MixProject do
       docs: docs(),
       deps: deps(),
       aliases: aliases(),
-      package: package()
+      package: package(),
+      elixirc_options: [warnings_as_errors: false]
     ]
   end
 
