@@ -4,24 +4,28 @@ on:
   push:
     branches:
       - main
-env:
-  otp: "25.0"
-  elixir: "1.14.2"
 jobs:
   test:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
+    strategy:
+      matrix:
+        include:
+          - elixir: "1.17.3"
+            otp: "26.2"
+          - elixir: "1.18.4"
+            otp: "27.3.4"
     env:
       MIX_ENV: test
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
       - name: Install Erlang & Elixir
         uses: erlef/setup-beam@v1
         with:
-          otp-version: ${{ env.otp }}
-          elixir-version: ${{ env.elixir }}
+          otp-version: ${{ matrix.otp }}
+          elixir-version: ${{ matrix.elixir }}
 
-      - uses: actions/cache@v2
+      - uses: actions/cache@v4
         with:
           path: deps
           key: mix-deps-${{ hashFiles('**/mix.lock') }}
