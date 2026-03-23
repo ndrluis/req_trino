@@ -19,8 +19,6 @@ defmodule ReqTrino do
   """
   require Logger
 
-  alias Req.Request
-
   @allowed_options ~w(
     host
     user
@@ -84,7 +82,7 @@ defmodule ReqTrino do
     request
     |> Request.put_header(@header_user, opts[:user])
     |> Request.put_header(@header_catalog, opts[:catalog])
-    |> Request.merge_options(auth: {opts[:user], opts[:password]})
+    |> Request.merge_options(auth: {:basic, "#{opts[:user]}:#{opts[:password]}"})
   end
 
   def build_req_params(request, opts) do
@@ -109,10 +107,8 @@ defmodule ReqTrino do
           Req.new(url: URI.parse(next_uri))
           |> build_req_params(request_options)
 
-        case Req.get(new_request) do
-          {_response, %{status: 200, body: body}} ->
-            {body["data"], body}
-        end
+        %Req.Response{status: 200, body: body} = Req.get!(new_request)
+        {body["data"], body}
 
       _ ->
         nil
@@ -133,10 +129,10 @@ defmodule ReqTrino do
       %{"nextUri" => next_uri, "stats" => %{"state" => _}} ->
         new_request = %{request | url: URI.parse(next_uri), method: :get}
 
-        {Request.halt(request), Req.get!(new_request)}
+        Request.halt(request, Req.get!(new_request))
 
       %{"stats" => %{"state" => _state}} ->
-        {Request.halt(request), response}
+        Request.halt(request, response)
     end
   end
 

@@ -14,7 +14,7 @@ We only supports Basic Authentication!
 
 ```elixir
 Mix.install([
-  {:req, "~> 0.3.5"},
+  {:req, "~> 0.5"},
   {:req_trino, "~> 0.1.0"}
 ])
 
