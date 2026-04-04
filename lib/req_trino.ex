@@ -104,7 +104,7 @@ defmodule ReqTrino do
 
       %{"nextUri" => next_uri, "stats" => %{"state" => "RUNNING"}} ->
         new_request =
-          Req.new(url: URI.parse(next_uri))
+          Req.new(url: URI.new!(next_uri))
           |> build_req_params(request_options)
 
         %Req.Response{status: 200, body: body} = Req.get!(new_request)
@@ -127,7 +127,7 @@ defmodule ReqTrino do
         }
 
       %{"nextUri" => next_uri, "stats" => %{"state" => _}} ->
-        new_request = %{request | url: URI.parse(next_uri), method: :get}
+        new_request = %{request | url: URI.new!(next_uri), method: :get}
 
         Request.halt(request, Req.get!(new_request))
 
