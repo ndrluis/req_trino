@@ -10,7 +10,7 @@ defmodule ReqTrino.MixProject do
       version: @version,
       description: @description,
       name: "ReqTrino",
-      elixir: "~> 1.14",
+      elixir: "~> 1.17",
       preferred_cli_env: [
         "test.all": :test,
         docs: :docs,
@@ -21,7 +21,7 @@ defmodule ReqTrino.MixProject do
       deps: deps(),
       aliases: aliases(),
       package: package(),
-      elixirc_options: [warnings_as_errors: false]
+      elixirc_options: [warnings_as_errors: true]
     ]
   end
 
